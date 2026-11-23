@@ -11,107 +11,127 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600&family=IBM+Plex+Mono:wght@500&display=swap">
 <style>
-/* Layout: app shell — sticky header with day context, content column (max 760px), bottom tab bar on phones / top tabs on wide screens */
-/* Single brand theme in University of Haifa / IBBRC colours: navy #193445, cyan #0BB5E5, light cyan #A3F0FC */
+/* Layout: phone-first app shell. Compact header (scrolls away), sticky day switcher, full-width cards, bottom tab bar on phones / top tabs on wide screens */
+/* Brand colours: navy #193445, cyan #0BB5E5, light cyan #A3F0FC. Light, soft-card look (as in Ramzor Milim) */
 :root{
-  --bg:#eaf7fb; --surface:#ffffff; --ink:#193445; --muted:#4f6b7d; --line:#cfe3ec;
-  --accent:#0bb5e5; --accent-soft:#d6f4fc; --teal:#0778a0; --teal-soft:#e0f4fa; --on-accent:#0d2230;
+  --bg:#f4f8fa; --surface:#ffffff; --ink:#193445; --muted:#5a7283; --line:#e2ebf0;
+  --accent:#0bb5e5; --accent-soft:#e3f7fd; --teal:#0778a0; --teal-soft:#e6f5fa; --on-accent:#0d2230;
   --navy:#193445; --navy-2:#22465c; --light:#a3f0fc; --plate:#ffffff;
+  --shadow:0 1px 2px rgba(25,52,69,.05),0 4px 14px rgba(25,52,69,.06);
+  --navh:0px;
   --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
   --body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
   --mono:"IBM Plex Mono", ui-monospace, Consolas, monospace;
   color-scheme:light;
 }
 *{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 html,body{background:var(--bg)}
-body{color:var(--ink);font:16px/1.55 var(--body);padding-bottom:calc(72px + env(safe-area-inset-bottom,0px))}
+body{color:var(--ink);font:16px/1.5 var(--body);padding-bottom:calc(68px + env(safe-area-inset-bottom,0px));overflow-x:hidden;-webkit-tap-highlight-color:transparent}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--navy)}
 .wrap{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-header.top{background:var(--navy);color:#fff;position:relative;z-index:5;border-bottom:4px solid var(--accent)}
-.logos{display:flex;align-items:center;gap:12px;flex-wrap:wrap;width:100%}
-.logos .uh{height:46px;width:auto;display:block}
-.logos .plate{background:var(--plate);border-radius:8px;padding:4px 8px;line-height:0}
-.logos .ib{height:38px;width:auto;display:block}
-@media (max-width:520px){.logos .uh{height:36px}.logos .ib{height:30px}}
-header.top .wrap{padding-block:10px;display:flex;align-items:center;gap:10px 16px;flex-wrap:wrap}
-header.top .prelim{margin-left:auto}
-.brand{display:flex;flex-direction:column;min-width:0}
-.brand b{font:700 1.15rem/1.15 var(--display);letter-spacing:.01em}
-.brand span{font-size:.85rem;color:var(--light)}
-.prelim{font:500 .7rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;background:var(--accent);color:var(--on-accent);padding:6px 8px;border-radius:4px;white-space:nowrap}
-nav.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--navy);border-top:1px solid var(--navy-2);z-index:6;padding-bottom:env(safe-area-inset-bottom,0px)}
+header.top{background:var(--navy);color:#fff;border-bottom:3px solid var(--accent)}
+header.top .wrap{padding-block:10px;display:flex;align-items:center;gap:12px}
+.plate{background:var(--plate);border-radius:8px;padding:3px 6px;line-height:0;flex:none}
+header.top .ib{height:28px;width:auto;display:block}
+.brand{display:flex;flex-direction:column;min-width:0;flex:1}
+.brand b{font:700 1.05rem/1.15 var(--display)}
+.brand span{font-size:.78rem;line-height:1.3;color:var(--light)}
+.prelim{font:500 .62rem/1.2 var(--mono);letter-spacing:.06em;text-transform:uppercase;background:var(--accent);color:var(--on-accent);padding:4px 6px;border-radius:4px;flex:none;max-width:9em;text-align:center}
+@media (max-width:560px){header.top .plate{display:none}}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);box-shadow:0 -2px 12px rgba(25,52,69,.06);z-index:6;padding-bottom:env(safe-area-inset-bottom,0px)}
 nav.tabs .wrap{display:grid;grid-template-columns:repeat({{NTABS}},1fr);gap:4px;padding-block:6px}
-nav.tabs a{display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:#c9dbe5;font:600 .75rem/1.2 var(--body);padding:6px 2px;border-radius:8px}
+nav.tabs a{display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--muted);font:600 .72rem/1.2 var(--body);padding:6px 2px;border-radius:12px}
 nav.tabs a svg{width:22px;height:22px}
-nav.tabs a[aria-current="page"]{color:var(--on-accent);background:var(--accent)}
-nav.tabs a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+nav.tabs a[aria-current="page"]{color:var(--navy);background:var(--accent-soft)}
+nav.tabs a[aria-current="page"] svg{color:var(--teal)}
+a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
 @media (min-width:820px){
+  :root{--navh:50px}
   body{padding-bottom:0}
-  nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);bottom:auto;border-top:0;box-shadow:0 2px 8px rgba(25,52,69,.18)}
-  nav.tabs a{flex-direction:row;justify-content:center;font-size:.9rem}
+  nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);bottom:auto;border-top:0;border-bottom:1px solid var(--line);height:var(--navh)}
+  nav.tabs .wrap{padding-block:5px}
+  nav.tabs a{flex-direction:row;justify-content:center;gap:8px;font-size:.9rem}
+  nav.tabs a svg{width:18px;height:18px}
 }
-main .wrap{padding-block:20px 32px}
-h1{font:700 clamp(1.6rem,4vw,2.2rem)/1.15 var(--display);margin:0 0 6px;text-wrap:balance}
-h2{font:700 1.2rem/1.25 var(--display);margin:0;text-wrap:balance}
-p.lede{color:var(--muted);margin:0 0 18px;max-width:65ch}
-.daypick{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px}
-.daypick button{font:600 .95rem/1.2 var(--body);border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:10px 6px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
-.daypick button small{font:500 .72rem/1 var(--mono);color:var(--muted);letter-spacing:.04em}
-.daypick button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-.daypick button[aria-pressed="true"] small{color:inherit;opacity:.75}
+main .wrap{padding-block:16px 28px}
+h1{font:700 1.5rem/1.15 var(--display);margin:0 0 4px;text-wrap:balance}
+h2{font:700 1.08rem/1.25 var(--display);margin:0;text-wrap:balance}
+p.lede{color:var(--muted);margin:0 0 14px;max-width:65ch;font-size:.92rem}
+/* Day switcher: segmented control that stays at the top while scrolling */
+.daybar{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--navh));z-index:4;background:var(--bg);margin:0 -16px;padding:8px 16px 10px}
+.daypick{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:#e4edf2;border-radius:14px;padding:4px}
+.daypick button{font:600 .95rem/1.15 var(--body);border:0;background:transparent;color:var(--muted);border-radius:10px;padding:7px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:1px;touch-action:manipulation}
+.daypick button small{font:500 .7rem/1.2 var(--body);letter-spacing:.01em}
+.daypick button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(25,52,69,.15)}
+.daypick button .today{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--accent);margin-left:4px;vertical-align:middle}
+.filterbar{display:flex;gap:8px;align-items:center;margin:2px 0 12px;flex-wrap:wrap}
+.chip{font:600 .82rem var(--body);border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:6px 12px;border-radius:999px;cursor:pointer;touch-action:manipulation}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+/* Program */
 .timeline{display:flex;flex-direction:column;gap:10px}
-.slot{display:grid;grid-template-columns:84px 1fr;gap:12px;align-items:start}
-.time{font:500 .8rem/1.35 var(--mono);color:var(--muted);padding-top:12px;font-variant-numeric:tabular-nums}
-.block{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;min-width:0}
-.block.break{background:transparent;border-style:dashed;padding:8px 14px;color:var(--muted)}
-.block.keynote{border-color:var(--accent);box-shadow:inset 4px 0 0 var(--accent)}
-.block.social{background:var(--teal-soft);border-color:transparent}
-.kind{font:500 .68rem/1 var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--teal);margin-bottom:4px}
-.block.keynote .kind{color:var(--teal)}
-.talks{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:2px}
+.slot{scroll-margin-top:calc(90px + var(--navh))}
+.block{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;min-width:0;box-shadow:var(--shadow)}
+.block.keynote{box-shadow:inset 4px 0 0 var(--accent),var(--shadow)}
+.block.social{background:var(--teal-soft);border-color:transparent;box-shadow:none}
+.head{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:4px;font:500 .74rem/1.3 var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.head .kind{color:var(--teal);letter-spacing:.06em;text-transform:uppercase;margin:0;font:inherit}
+.head .dot{opacity:.5}
+.brk{display:flex;align-items:center;gap:10px;padding:2px 4px;color:var(--muted);font-size:.88rem}
+.brk .time{font:500 .74rem/1.3 var(--mono);font-variant-numeric:tabular-nums;flex:none}
+.brk::after{content:"";flex:1;border-top:1px dashed #c9d8e0;order:3}
+.brk .live{order:4;margin-left:0}
+.live{font:700 .66rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;padding:4px 7px;border-radius:999px;background:var(--accent);color:var(--on-accent);margin-left:auto}
+.live.next{background:var(--accent-soft);color:var(--teal)}
+.slot.is-now .block{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent),var(--shadow)}
+.slot.is-now.brk{color:var(--ink)}
+.slot.is-past{opacity:.55}
+.talks{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column}
 .talks li{display:flex;align-items:center;gap:8px;border-top:1px solid var(--line);padding:8px 0}
 .talks li:first-child{border-top:0}
+.talks li:last-child{padding-bottom:0}
 .who{flex:1;min-width:0}
 .who a,.who .nm{font-weight:600;color:var(--ink);text-decoration:none}
 .who a:hover{text-decoration:underline}
-.who .tt{display:block;font-size:.88rem;color:var(--muted);line-height:1.35}
-.tba{font:500 .72rem/1 var(--mono);color:var(--muted);border:1px dashed var(--line);padding:3px 6px;border-radius:4px}
-.star{border:0;background:none;cursor:pointer;color:var(--muted);padding:6px;border-radius:6px;flex:none}
-.star svg{width:20px;height:20px}
+.who .tt{display:block;font-size:.86rem;color:var(--muted);line-height:1.35}
+.tba{font:500 .72rem/1 var(--mono);color:var(--muted);border:1px dashed #c9d8e0;padding:3px 6px;border-radius:4px}
+.star{border:0;background:none;cursor:pointer;color:#b4c6d1;padding:10px;margin:-6px -8px -6px 0;border-radius:8px;flex:none;touch-action:manipulation}
+.star svg{width:22px;height:22px;display:block}
 .star[aria-pressed="true"]{color:var(--accent)}
-.search{width:100%;font:16px var(--body);padding:11px 14px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);margin-bottom:14px}
+/* Speakers */
+.search{width:100%;font:16px var(--body);padding:11px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);margin-bottom:12px;box-shadow:var(--shadow)}
 .cards{display:flex;flex-direction:column;gap:10px}
-details.spk{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+details.spk{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;box-shadow:var(--shadow)}
 details.spk summary{cursor:pointer;list-style:none;display:flex;gap:12px;align-items:flex-start}
 details.spk summary::-webkit-details-marker{display:none}
 .avatar{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font:700 .9rem var(--display);background:var(--teal-soft);color:var(--teal)}
 .spk .meta{min-width:0;flex:1}
 .spk .meta b{display:block}
 .spk .meta small{color:var(--muted);display:block;line-height:1.35}
-.spk .when{font:500 .74rem/1.3 var(--mono);color:var(--teal);margin-top:4px;display:block}
+.spk .when{font:500 .72rem/1.35 var(--mono);color:var(--teal);margin-top:4px;display:block}
 .abs{margin:12px 0 0;padding-top:12px;border-top:1px solid var(--line);max-width:65ch}
 .abs h3{font:700 1rem/1.3 var(--display);margin:0 0 6px}
 .abs p{margin:0;font-size:.95rem}
 .pending{color:var(--muted);font-style:italic}
-.empty{background:var(--surface);border:1px dashed var(--line);border-radius:12px;padding:22px;text-align:left}
+.empty{background:var(--surface);border:1px dashed #c9d8e0;border-radius:14px;padding:20px}
 .empty h2{margin-bottom:6px}
 .empty ul{margin:10px 0 0;padding-left:20px;color:var(--muted)}
+/* Info cards */
 .info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:var(--shadow)}
 .card h2{font-size:1.05rem;margin-bottom:6px}
 .card p{margin:0 0 6px}
 .card a{color:var(--teal);font-weight:600}
+.kind{font:500 .68rem/1 var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--teal);margin-bottom:6px}
 .mono{font-family:var(--mono);font-size:.88rem}
-.note{margin-top:22px;font-size:.85rem;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
-.filterbar{display:flex;gap:8px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
-.chip{font:600 .82rem var(--body);border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:6px 12px;border-radius:999px;cursor:pointer}
-.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
-@media (prefers-reduced-motion:no-preference){.block,details.spk{transition:border-color .15s}}
-@media (max-width:420px){.slot{grid-template-columns:62px 1fr;gap:8px}.time{font-size:.72rem}}
+.hosts{margin-top:14px;background:var(--navy);border-radius:14px;padding:16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.hosts .uh{height:42px;width:auto;display:block}
+.hosts .ib{height:34px;width:auto;display:block}
+.note{margin-top:18px;font-size:.85rem;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
 </style>
 
 <header class="top"><div class="wrap">
-  <div class="logos"><img class="uh" src="img/uhaifa-white.jpg" alt="University of Haifa"><span class="plate"><img class="ib" src="img/ibbrc.jpg" alt="The Integrative Brain and Behavior Research Center (IBBRC)"></span></div>
+  <span class="plate"><img class="ib" src="img/ibbrc.jpg" alt="IBBRC"></span>
   <div class="brand"><b>Brain-Body Plasticity</b><span>10th International IBBRC Conference · Feb 23–25, 2027</span></div>
   <span class="prelim">{{BADGE}}</span>
 </div></header>
@@ -159,7 +179,7 @@ const SPK = {
   parvizi:{n:"Josef Parvizi",a:"Stanford University"}
 };
 const DAYS=[
- {id:"d1",label:"Day 1",date:"Tue · Feb 23",slots:[
+ {id:"d1",label:"Day 1",date:"Tue · Feb 23",iso:"2027-02-23",slots:[
   {t:"08:30–09:00",k:"break",title:"Coffee & registration"},
   {t:"09:00–09:30",k:"plain",title:"Opening & welcome",talks:["maroun"]},
   {t:"09:30–10:30",k:"keynote",kind:"Keynote",talks:["schwartz"]},
@@ -172,7 +192,7 @@ const DAYS=[
   {t:"16:10–17:00",k:"plain",kind:"Blitz",title:"Blitz talks"},
   {t:"17:00–18:00",k:"plain",kind:"Posters",title:"Posters & blind dates",link:"#posters"}
  ]},
- {id:"d2",label:"Day 2",date:"Wed · Feb 24",slots:[
+ {id:"d2",label:"Day 2",date:"Wed · Feb 24",iso:"2027-02-24",slots:[
   {t:"08:30–09:00",k:"break",title:"Coffee"},
   {t:"09:00–10:00",k:"keynote",kind:"Plenary",talks:["costa"]},
   {t:"10:00–11:40",k:"session",kind:"Session 3",title:"Brain-Body Psychiatry",talks:["javitt","herzog","maroun",null]},
@@ -181,7 +201,7 @@ const DAYS=[
   {t:"14:00–19:00",k:"social",kind:"Social program",title:"Speakers tour",link:"#social"},
   {t:"19:00",k:"social",kind:"Social program",title:"Conference dinner"}/*/@speakers*/
  ]},
- {id:"d3",label:"Day 3",date:"Thu · Feb 25",slots:[
+ {id:"d3",label:"Day 3",date:"Thu · Feb 25",iso:"2027-02-25",slots:[
   {t:"08:30–09:00",k:"break",title:"Coffee"},
   {t:"09:00–10:40",k:"session",kind:"Session 5",talks:["bennett","gould","slutsky","kida"]},
   {t:"10:40–12:00",k:"session",kind:"Session 6",talks:["kayal","livneh","hummel","parvizi"]},
@@ -207,14 +227,36 @@ function talkLi(id){
   return `<li><span class="who"><a href="#speakers" data-open="${id}">${esc(s.n)}</a><span class="tt">${s.t?esc(s.t):(s.a?esc(s.a):"")}</span></span>
   <button class="star" data-fav="${id}" aria-pressed="${fav.has(id)}" aria-label="Add ${esc(s.n)} to my schedule">${starSvg}</button></li>`;
 }
+/* Now / Next: uses Israel time. For testing, add ?now=2027-02-23T10:45 to the address. */
+function nowIL(){
+  const q=new URLSearchParams(location.search).get("now");
+  if(q&&/^\d{4}-\d\d-\d\dT\d\d:\d\d/.test(q)) return {date:q.slice(0,10),min:+q.slice(11,13)*60+ +q.slice(14,16)};
+  try{
+    const p={};new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Jerusalem",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hourCycle:"h23"}).formatToParts(new Date()).forEach(x=>p[x.type]=x.value);
+    return {date:`${p.year}-${p.month}-${p.day}`,min:+p.hour*60+ +p.minute};
+  }catch(e){return {date:"",min:0}}
+}
+const toMin=h=>{const m=/(\d\d?):(\d\d)/.exec(h||"");return m?+m[1]*60+ +m[2]:null};
+function slotStatus(d){
+  const n=nowIL(),out={};
+  if(n.date!==d.iso) return out;
+  let next=false;
+  d.slots.forEach((s,i)=>{const [a,b]=s.t.split("–"),st=toMin(a),en=toMin(b)??st+120;
+    if(n.min>=en) out[i]="past"; else if(n.min>=st) out[i]="now"; else if(!next){out[i]="next";next=true}});
+  return out;
+}
+const todayId=()=>{const n=nowIL();const d=DAYS.find(x=>x.iso===n.date);return d?d.id:null};
 function renderProgram(){
   const d=DAYS.find(x=>x.id===day)||DAYS[0];
-  const slots=d.slots.filter(s=>!onlyFav||(s.talks||[]).some(id=>id&&fav.has(id)));
-  return `<h1>Program</h1><p class="lede">Three days of talks on how brain and body shape each other. Times and speakers are preliminary and may change. Tap the star to build your own schedule.</p>
-  <div class="daypick" role="group" aria-label="Choose day">${DAYS.map(x=>`<button data-day="${x.id}" aria-pressed="${x.id===d.id}">${x.label}<small>${x.date}</small></button>`).join("")}</div>
-  <div class="filterbar"><button class="chip" id="onlyfav" aria-pressed="${onlyFav}">My schedule only</button></div>
-  <div class="timeline">${slots.length?slots.map(s=>`<div class="slot"><div class="time">${s.t}</div>
-   <div class="block ${s.k}">${s.kind?`<div class="kind">${esc(s.kind)}</div>`:""}${s.title?`<h2>${s.link?`<a href="${s.link}" style="color:inherit">${esc(s.title)}</a>`:esc(s.title)}</h2>`:""}
+  const st=slotStatus(d),tid=todayId();
+  const slots=d.slots.map((s,i)=>[s,st[i]]).filter(([s])=>!onlyFav||(s.talks||[]).some(id=>id&&fav.has(id)));
+  const badge=x=>x==="now"?`<span class="live">Now</span>`:x==="next"?`<span class="live next">Next</span>`:"";
+  return `<h1>Program</h1><p class="lede">Preliminary program: times and speakers may change. Tap ★ to build your own schedule.</p>
+  <div class="daybar"><div class="daypick" role="group" aria-label="Choose day">${DAYS.map(x=>`<button data-day="${x.id}" aria-pressed="${x.id===d.id}">${x.label}<small>${x.date}${x.id===tid?`<span class="today" title="Today"></span>`:""}</small></button>`).join("")}</div></div>
+  <div class="filterbar"><button class="chip" id="onlyfav" aria-pressed="${onlyFav}">★ My schedule only</button></div>
+  <div class="timeline">${slots.length?slots.map(([s,x])=>s.k==="break"
+   ?`<div class="slot brk${x?" is-"+x:""}"><span class="time">${s.t}</span><span>${esc(s.title)}</span>${badge(x)}</div>`
+   :`<div class="slot${x?" is-"+x:""}"><div class="block ${s.k}"><div class="head"><span>${s.t}</span>${s.kind?`<span class="dot">·</span><span class="kind">${esc(s.kind)}</span>`:""}${badge(x)}</div>${s.title?`<h2>${s.link?`<a href="${s.link}" style="color:inherit">${esc(s.title)}</a>`:esc(s.title)}</h2>`:""}
    ${s.talks?`<ul class="talks">${s.talks.map(talkLi).join("")}</ul>`:""}</div></div>`).join("")
    :`<div class="empty"><h2>No starred talks on this day</h2><p>Turn off “My schedule only”, then tap the star next to a talk to add it.</p></div>`}</div>`;
 }
@@ -253,6 +295,7 @@ function renderInfo(){
    <div class="card"><div class="kind">Contact</div><h2>IBBRC office</h2><p class="mono" style="user-select:all">ibbrc@labs.hevra.haifa.ac.il</p></div>
    <div class="card"><div class="kind">Organizing committee</div><h2>Kobi Rosenblum, Smadar Ovadia-Caro, Luna Jammal</h2><p>The Integrative Brain and Behavior Research Center (IBBRC)</p></div>
   </div>
+  <div class="hosts"><img class="uh" src="img/uhaifa-white.jpg" alt="University of Haifa"><span class="plate"><img class="ib" src="img/ibbrc.jpg" alt="The Integrative Brain and Behavior Research Center (IBBRC)"></span></div>
   <p class="note">This is a preliminary program. Speakers, times and rooms may change before the conference.</p>`;
 }
 const VIEWS={program:renderProgram,speakers:renderSpeakers,posters:renderPosters,/*@speakers*/social:renderSocial,/*/@speakers*/info:renderInfo};
@@ -275,7 +318,10 @@ document.addEventListener("click",e=>{
   if(op){e.preventDefault();qval="";const id=op.dataset.open;location.hash="#speakers";setTimeout(()=>{const d=document.getElementById("spk-"+id);if(d){d.open=true;d.scrollIntoView({block:"start",behavior:"smooth"})}},30)}
 });
 window.addEventListener("hashchange",route);
+const tid0=todayId();if(tid0)day=tid0;
 route();
+if(tid0&&(location.hash||"#program")==="#program"){const el=document.querySelector(".slot.is-now,.slot.is-next");if(el)setTimeout(()=>el.scrollIntoView({block:"start"}),50)}
+setInterval(()=>{if((location.hash||"#program")==="#program"&&todayId()===day){const y=scrollY;route();scrollTo(0,y)}},60000);
 </script>
 
 </body>
