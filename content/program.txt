@@ -1,0 +1,148 @@
+# Program of the IBBRC 2027 conference (both pages: all participants + invited speakers).
+# Full instructions: CLAUDE.md (for Claude) and EDITING.md (Hebrew).
+#
+#  - Each day starts with:   === Day 1 | Tue · Feb 23 | 2027-02-23
+#  - Each item starts with its time:   -- 10:00–11:40   (or a single time:  -- 19:00)
+#    Items must be in time order within the day.
+#  - Then these fields (only the ones you need):
+#      Type:      break | session | keynote | event | social
+#                   break   = thin grey line (coffee, lunch)
+#                   session = card with a list of speakers
+#                   keynote = card with a cyan stripe (keynote / plenary)
+#                   event   = plain card (opening, debate, posters, closing)
+#                   social  = light-blue card (tour, dinner)
+#      Label:     small blue caption above the title, e.g. Session 3, Keynote, Plenary
+#      Title:     e.g. Brain-Body Psychiatry, Coffee break
+#      Speakers:  speaker ids from content/speakers.txt, in talk order, separated by commas.
+#                 Write TBA for a talk whose speaker is not known yet.
+#      Link:      posters (opens the Posters tab) or tour (opens the Tour tab, speakers page only)
+#      Show:      speakers page only   (hidden on the page for all participants)
+#  - Lines that start with # are notes and are not shown on the site.
+
+=== Day 1 | Tue · Feb 23 | 2027-02-23
+
+-- 08:30–09:00
+Type: break
+Title: Coffee & registration
+
+-- 09:00–09:30
+Type: event
+Title: Opening & welcome
+Speakers: maroun
+
+-- 09:30–10:30
+Type: keynote
+Label: Keynote
+Speakers: schwartz
+
+-- 10:30–12:10
+Type: session
+Label: Session 1
+Speakers: spiegel, liraz, umschweif, marco
+
+-- 12:10–12:20
+Type: break
+Title: Coffee break
+
+-- 12:20–13:00
+Type: event
+Label: Special session
+Title: AI session — debate
+
+-- 13:00–14:00
+Type: break
+Title: Lunch
+
+-- 14:00–15:40
+Type: session
+Label: Session 2
+Speakers: margulies, nenning, ramot, ovadia
+
+-- 15:40–16:10
+Type: break
+Title: Coffee break
+
+-- 16:10–17:00
+Type: event
+Label: Blitz
+Title: Blitz talks
+
+-- 17:00–18:00
+Type: event
+Label: Posters
+Title: Posters & blind dates
+Link: posters
+
+=== Day 2 | Wed · Feb 24 | 2027-02-24
+
+-- 08:30–09:00
+Type: break
+Title: Coffee
+
+-- 09:00–10:00
+Type: keynote
+Label: Plenary
+Speakers: costa
+
+-- 10:00–11:40
+Type: session
+Label: Session 3
+Title: Brain-Body Psychiatry
+Speakers: javitt, herzog, maroun, TBA
+
+-- 11:40–13:00
+Type: session
+Label: Session 4
+Speakers: chen, TBA, blinder, jammal
+
+-- 13:00–14:00
+Type: break
+Title: Lunch
+
+-- 14:00–19:00
+Type: social
+Label: Social program
+Title: Speakers tour
+Link: tour
+Show: speakers page only
+
+-- 19:00
+Type: social
+Label: Social program
+Title: Conference dinner
+Show: speakers page only
+
+=== Day 3 | Thu · Feb 25 | 2027-02-25
+
+-- 08:30–09:00
+Type: break
+Title: Coffee
+
+-- 09:00–10:40
+Type: session
+Label: Session 5
+Speakers: bennett, gould, slutsky, kida
+
+-- 10:40–12:00
+Type: session
+Label: Session 6
+Speakers: kayal, livneh, hummel, parvizi
+
+-- 12:00–13:00
+Type: break
+Title: Lunch
+
+-- 13:00–14:40
+Type: session
+Label: Session 7
+Title: Brain-Body Interactions
+Speakers: rozenkrantz, avidan, admon, fogel
+
+-- 14:40–15:15
+Type: keynote
+Label: Keynote
+Speakers: fried
+
+-- 15:15–16:15
+Type: event
+Title: Closing remarks & awards

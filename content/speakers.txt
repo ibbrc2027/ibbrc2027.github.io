@@ -1,0 +1,191 @@
+# Speakers of the IBBRC 2027 conference.
+# The website shows names, institutions, talk titles and abstracts from this file.
+#
+# How to edit (full instructions: EDITING.md, in Hebrew; for Claude: CLAUDE.md):
+#  - Each speaker starts with a line "== id" (the id is short, lowercase, no spaces, e.g. == schwartz).
+#    Don't change an existing id: the program (src/site.html) uses it.
+#  - Then: Name:, Institution:, Title:, Abstract:  (Title and Abstract may stay empty until they arrive).
+#  - The abstract starts on the line after "Abstract:" and goes on until the next "==" line.
+#    A blank line inside the abstract starts a new paragraph.
+#  - Lines that start with # are notes and are not shown on the site.
+#  - A new speaker appears in the Speakers tab (under "All"); to give them a time, add their id to content/program.txt.
+
+
+== schwartz
+Name: Michal Schwartz
+Institution: Weizmann Institute of Science
+Title: The Brain-Body Immune Axis in Alzheimer's Disease: From Bench to Bedside
+Abstract:
+Nearly three decades ago, we challenged the prevailing view of the brain as an immune-isolated organ, demonstrating that systemic immunity is essential for brain maintenance and repair. This work established the brain-body immune axis as a key regulator of brain homeostasis, aging, and neurodegeneration. We proposed that brain aging reflects immune aging more than chronological age, characterized by impaired immune surveillance and accumulation of senescent immune cells. In Alzheimer's disease (AD), chronic neuroinflammation, driven in part by senescent microglia and systemic immune dysfunction, is a major contributor to disease progression. Building on these insights, we explored immune checkpoint modulation as a therapeutic strategy. We demonstrated that intermittent PD-L1 blockade restores immune competence, enhances CNS immune surveillance, and modifies disease progression in preclinical models of dementia. Notably, the earliest and most consistent effect was the selective elimination of senescent microglia, providing a mechanistic basis for therapeutic benefit. Translating these findings to the clinic, we developed an anti-PD-L1 antibody optimized for AD, which has successfully completed a Phase 1b clinical trial, demonstrating favorable safety and encouraging biomarker effects. These findings position immune checkpoint immunotherapy as a promising new approach to treating Alzheimer's disease.
+
+== fried
+Name: Itzhak Fried
+Institution: UCLA
+Title:
+Abstract:
+
+== spiegel
+Name: Ivo Spiegel
+Institution: Weizmann Institute of Science
+Title:
+Abstract:
+
+== liraz
+Name: Sigal Liraz-Zaltsman
+Institution:
+Title:
+Abstract:
+
+== umschweif
+Name: Gali Umschweif
+Institution: Hebrew University of Jerusalem
+Title:
+Abstract:
+
+== marco
+Name: Asaf Marco
+Institution: Hebrew University of Jerusalem
+Title: QR2 as a Molecular Switch Between Survival and Plasticity in the Stressed Brain
+Abstract:
+
+== margulies
+Name: Daniel Margulies
+Institution: University of Oxford
+Title:
+Abstract:
+
+== nenning
+Name: Karl-Heinz Nenning
+Institution: Medical University of Vienna
+Title: Tracking Brain Organization in Health and Disease: From Static Connectivity to Brain Dynamics and Brain-Body Interactions
+Abstract:
+Understanding brain organization requires a shift from static snapshots of connectivity toward a dynamic, multi-modal framework that accounts for the brain's temporal fluctuations and its interaction with the body. This talk explores this evolution across the spectrum of health and neurological disease. We first demonstrate how functional connectivity fingerprints can be leveraged to address clinical challenges in epilepsy, such as using machine learning to predict cognitive outcomes, specifically language decline following anterior temporal lobe resection. Moving beyond static maps, we show that brain dynamics, quantified through local temporal features like autocorrelation decay, can non-invasively identify seizure onset zones, offering a promising tool for surgical planning. The utility of these dynamic markers extends to other conditions, such as pediatric stroke, where the prevalence and transitions of specific brain states serve as indicators of network disruption and cognitive impairment. Finally, we bridge the gap between neural activity and systemic physiology by illustrating how such fMRI-defined brain states relate to physiological signals like pupil dilation and EEG. Together, these studies argue for an integrated framework spanning connectivity, spatiotemporal dynamics, and brain-body interactions as a foundation for more precise and clinically actionable markers of brain health.
+
+== ramot
+Name: Michal Ramot
+Institution: Weizmann Institute of Science
+Title:
+Abstract:
+
+== ovadia
+Name: Smadar Ovadia-Caro
+Institution: University of Haifa
+Title:
+Abstract:
+
+== javitt
+Name: Daniel C. Javitt
+Institution: Columbia University
+Title:
+Abstract:
+
+== herzog
+Name: Michael Herzog
+Institution: EPFL
+Title:
+Abstract:
+
+== maroun
+Name: Mouna Maroun
+Institution: University of Haifa
+Title:
+Abstract:
+
+== chen
+Name: Chen Ran
+Institution: Scripps Research
+Title: The circuitry and coding of interoception
+Abstract:
+The interoceptive system enables the brain to detect signals from internal organs—stomach distension, intestinal nutrients, airway irritants, blood pressure, oxygen saturation—to maintain bodily homeostasis. The nucleus of the solitary tract (NTS) in the brainstem is the brain's primary interoceptive hub. It integrates and processes convergent sensory inputs from visceral organs via the vagus nerve and spinal cord, transmitting signals to higher-order brain regions to regulate behavior, physiology, and metabolism. Despite its importance, the principles by which the NTS organizes peripheral information to mediate these complex responses remain poorly understood. Here we develop a novel in vivo two-photon brainstem imaging platform, which allows us to record the activities of thousands of NTS neurons simultaneously. We discover that the NTS creates a map of internal organs that takes the shape of a "visceral homunculus". This topography requires brainstem inhibition, as blockade of inhibition broadens neuronal tuning and disrupts spatial organization. Combining brainstem imaging with genetic strategies to label targeted populations of NTS neurons, we show that the NTS creates parallel viscerosensory pathways. These pathways are distributed across the topographic map of internal organs and are similarly tuned to respond to various viscerosensory stimuli but differentially control behavior and metabolism. Our work establishes the conceptual framework of the organizational logic of the brainstem interoceptive circuits.
+
+== blinder
+Name: Pablo Blinder
+Institution: Tel Aviv University
+Title:
+Abstract:
+
+== jammal
+Name: Luna Jammal
+Institution: University of Haifa
+Title:
+Abstract:
+
+== bennett
+Name: David A. Bennett
+Institution: Rush University
+Title:
+Abstract:
+
+== gould
+Name: Nathaniel Gould
+Institution: University of Oxford
+Title:
+Abstract:
+
+== slutsky
+Name: Inna Slutsky
+Institution: Tel Aviv University
+Title:
+Abstract:
+
+== kida
+Name: Satoshi Kida
+Institution: The University of Tokyo
+Title:
+Abstract:
+
+== kayal
+Name: Hanin Kayal
+Institution:
+Title:
+Abstract:
+
+== livneh
+Name: Yoav Livneh
+Institution: Weizmann Institute of Science
+Title: Brain-body interactions: sensations and predictions in the insular cortex
+Abstract:
+The continuous dialog between brain and body is essential for physical and mental health. How does cortical activity generate interoceptive sensations? How are internal and external information streams integrated to form predictions, and prepare the body for anticipated physiological changes? I will present our recent work combining non-invasive gut optogenetics for quantitative interoceptive psychophysics with insular cortex imaging, optogenetics, and endocrine measurements. Using this approach, we identify neural mechanisms underlying interoceptive perception and predictive learning in the insular cortex. We further demonstrate how these cortical predictions support anticipatory physiological regulation and long-term metabolic homeostasis.
+
+== hummel
+Name: Thomas Hummel
+Institution: TU Dresden
+Title: Clinical aspects of olfactory plasticity
+Abstract:
+
+== rozenkrantz
+Name: Liron Rozenkrantz
+Institution: Bar-Ilan University
+Title: Cognition at the service of physiological regulation? Voluntary attention regulates acute immune responses in humans
+Abstract:
+Physiological regulation is traditionally understood as relying on largely automatic mechanisms that maintain internal stability. Yet could voluntary cognitive processes, such as directing attention, also participate in regulating fundamental bodily functions? Across three preregistered experiments (N = 57), we investigated whether voluntary attention influences acute inflammatory responses in humans. Directing attention toward sensations at an inflammatory site reduced the magnitude of inflammation and accelerated recovery compared with distraction. These effects were accompanied by increased parasympathetic activity and persisted, albeit attenuated, following pharmacological reduction of sensory signaling. Together, these findings demonstrate that voluntary attention can regulate acute inflammation, suggesting that higher-order cognitive processes actively contribute to physiological regulation.
+
+== avidan
+Name: Galia Avidan
+Institution: Ben-Gurion University of the Negev
+Title:
+Abstract:
+
+== admon
+Name: Roee Admon
+Institution: University of Haifa
+Title: Coping with Trauma: New Insights from a Longitudinal Study of October 7 Music Festival Survivors
+Abstract:
+
+== fogel
+Name: Irit Weissman-Fogel
+Institution: University of Haifa
+Title:
+Abstract:
+
+== costa
+Name: Mauro Costa-Mattioli
+Institution: Altos Labs
+Title:
+Abstract:
+
+== parvizi
+Name: Josef Parvizi
+Institution: Stanford University
+Title:
+Abstract:

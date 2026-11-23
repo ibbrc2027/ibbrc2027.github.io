@@ -1,0 +1,18 @@
+# Posters of the IBBRC 2027 conference (Posters tab).
+# Full instructions: CLAUDE.md (for Claude) and EDITING.md (Hebrew).
+#
+#  - Each poster starts with a line "== number" (the poster/board number: digits, or a letter + digits, e.g. == 12 or == A12).
+#  - Then: Title:, Authors:, Institution:, Abstract:  (Abstract is always last; Institution and Abstract may stay empty).
+#  - Authors: as on the submission, separated by commas.
+#  - The abstract starts on the line after "Abstract:" and goes on until the next "==" line.
+#    A blank line inside the abstract starts a new paragraph.
+#  - Lines that start with # are notes and are not shown on the site.
+#  - While there are no posters here, the Posters tab says they will be listed later.
+#
+# Example (remove the # marks to use it):
+# == 1
+# Title: Interoceptive signals shape memory consolidation
+# Authors: First Author, Second Author
+# Institution: University of Haifa
+# Abstract:
+# Text of the abstract...
