@@ -2,8 +2,8 @@
 
 10th International IBBRC Conference, "Brain–Body Plasticity", Feb 23–25 2027, University of Haifa.
 
-- Page for all participants: https://lamado02.github.io/ibbrc2027/
-- Page for invited speakers (do not link it from the public page): https://lamado02.github.io/ibbrc2027/speakers-b663ff.html
+- Page for all participants: https://ibbrc2027.github.io/
+- Page for invited speakers (do not link it from the public page): https://ibbrc2027.github.io/speakers-b663ff.html
 
 ## How it is built
 
