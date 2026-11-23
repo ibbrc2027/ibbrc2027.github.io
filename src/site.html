@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>html,body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>{{TITLE}}</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: app shell — sticky header with day context, content column (max 760px), bottom tab bar on phones / top tabs on wide screens */
+/* Single brand theme in University of Haifa / IBBRC colours: navy #193445, cyan #0BB5E5, light cyan #A3F0FC */
+:root{
+  --bg:#eaf7fb; --surface:#ffffff; --ink:#193445; --muted:#4f6b7d; --line:#cfe3ec;
+  --accent:#0bb5e5; --accent-soft:#d6f4fc; --teal:#0778a0; --teal-soft:#e0f4fa; --on-accent:#0d2230;
+  --navy:#193445; --navy-2:#22465c; --light:#a3f0fc; --plate:#ffffff;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Consolas, monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{background:var(--bg)}
+body{color:var(--ink);font:16px/1.55 var(--body);padding-bottom:calc(72px + env(safe-area-inset-bottom,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--navy)}
+.wrap{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.top{background:var(--navy);color:#fff;position:relative;z-index:5;border-bottom:4px solid var(--accent)}
+.logos{display:flex;align-items:center;gap:12px;flex-wrap:wrap;width:100%}
+.logos .uh{height:46px;width:auto;display:block}
+.logos .plate{background:var(--plate);border-radius:8px;padding:4px 8px;line-height:0}
+.logos .ib{height:38px;width:auto;display:block}
+@media (max-width:520px){.logos .uh{height:36px}.logos .ib{height:30px}}
+header.top .wrap{padding-block:10px;display:flex;align-items:center;gap:10px 16px;flex-wrap:wrap}
+header.top .prelim{margin-left:auto}
+.brand{display:flex;flex-direction:column;min-width:0}
+.brand b{font:700 1.15rem/1.15 var(--display);letter-spacing:.01em}
+.brand span{font-size:.85rem;color:var(--light)}
+.prelim{font:500 .7rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;background:var(--accent);color:var(--on-accent);padding:6px 8px;border-radius:4px;white-space:nowrap}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--navy);border-top:1px solid var(--navy-2);z-index:6;padding-bottom:env(safe-area-inset-bottom,0px)}
+nav.tabs .wrap{display:grid;grid-template-columns:repeat({{NTABS}},1fr);gap:4px;padding-block:6px}
+nav.tabs a{display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:#c9dbe5;font:600 .75rem/1.2 var(--body);padding:6px 2px;border-radius:8px}
+nav.tabs a svg{width:22px;height:22px}
+nav.tabs a[aria-current="page"]{color:var(--on-accent);background:var(--accent)}
+nav.tabs a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+@media (min-width:820px){
+  body{padding-bottom:0}
+  nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);bottom:auto;border-top:0;box-shadow:0 2px 8px rgba(25,52,69,.18)}
+  nav.tabs a{flex-direction:row;justify-content:center;font-size:.9rem}
+}
+main .wrap{padding-block:20px 32px}
+h1{font:700 clamp(1.6rem,4vw,2.2rem)/1.15 var(--display);margin:0 0 6px;text-wrap:balance}
+h2{font:700 1.2rem/1.25 var(--display);margin:0;text-wrap:balance}
+p.lede{color:var(--muted);margin:0 0 18px;max-width:65ch}
+.daypick{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px}
+.daypick button{font:600 .95rem/1.2 var(--body);border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:10px 6px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
+.daypick button small{font:500 .72rem/1 var(--mono);color:var(--muted);letter-spacing:.04em}
+.daypick button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.daypick button[aria-pressed="true"] small{color:inherit;opacity:.75}
+.timeline{display:flex;flex-direction:column;gap:10px}
+.slot{display:grid;grid-template-columns:84px 1fr;gap:12px;align-items:start}
+.time{font:500 .8rem/1.35 var(--mono);color:var(--muted);padding-top:12px;font-variant-numeric:tabular-nums}
+.block{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;min-width:0}
+.block.break{background:transparent;border-style:dashed;padding:8px 14px;color:var(--muted)}
+.block.keynote{border-color:var(--accent);box-shadow:inset 4px 0 0 var(--accent)}
+.block.social{background:var(--teal-soft);border-color:transparent}
+.kind{font:500 .68rem/1 var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--teal);margin-bottom:4px}
+.block.keynote .kind{color:var(--teal)}
+.talks{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:2px}
+.talks li{display:flex;align-items:center;gap:8px;border-top:1px solid var(--line);padding:8px 0}
+.talks li:first-child{border-top:0}
+.who{flex:1;min-width:0}
+.who a,.who .nm{font-weight:600;color:var(--ink);text-decoration:none}
+.who a:hover{text-decoration:underline}
+.who .tt{display:block;font-size:.88rem;color:var(--muted);line-height:1.35}
+.tba{font:500 .72rem/1 var(--mono);color:var(--muted);border:1px dashed var(--line);padding:3px 6px;border-radius:4px}
+.star{border:0;background:none;cursor:pointer;color:var(--muted);padding:6px;border-radius:6px;flex:none}
+.star svg{width:20px;height:20px}
+.star[aria-pressed="true"]{color:var(--accent)}
+.search{width:100%;font:16px var(--body);padding:11px 14px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);margin-bottom:14px}
+.cards{display:flex;flex-direction:column;gap:10px}
+details.spk{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+details.spk summary{cursor:pointer;list-style:none;display:flex;gap:12px;align-items:flex-start}
+details.spk summary::-webkit-details-marker{display:none}
+.avatar{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font:700 .9rem var(--display);background:var(--teal-soft);color:var(--teal)}
+.spk .meta{min-width:0;flex:1}
+.spk .meta b{display:block}
+.spk .meta small{color:var(--muted);display:block;line-height:1.35}
+.spk .when{font:500 .74rem/1.3 var(--mono);color:var(--teal);margin-top:4px;display:block}
+.abs{margin:12px 0 0;padding-top:12px;border-top:1px solid var(--line);max-width:65ch}
+.abs h3{font:700 1rem/1.3 var(--display);margin:0 0 6px}
+.abs p{margin:0;font-size:.95rem}
+.pending{color:var(--muted);font-style:italic}
+.empty{background:var(--surface);border:1px dashed var(--line);border-radius:12px;padding:22px;text-align:left}
+.empty h2{margin-bottom:6px}
+.empty ul{margin:10px 0 0;padding-left:20px;color:var(--muted)}
+.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px}
+.card h2{font-size:1.05rem;margin-bottom:6px}
+.card p{margin:0 0 6px}
+.card a{color:var(--teal);font-weight:600}
+.mono{font-family:var(--mono);font-size:.88rem}
+.note{margin-top:22px;font-size:.85rem;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+.filterbar{display:flex;gap:8px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
+.chip{font:600 .82rem var(--body);border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:6px 12px;border-radius:999px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+@media (prefers-reduced-motion:no-preference){.block,details.spk{transition:border-color .15s}}
+@media (max-width:420px){.slot{grid-template-columns:62px 1fr;gap:8px}.time{font-size:.72rem}}
+</style>
+
+<header class="top"><div class="wrap">
+  <div class="logos"><img class="uh" src="img/uhaifa-white.jpg" alt="University of Haifa"><span class="plate"><img class="ib" src="img/ibbrc.jpg" alt="The Integrative Brain and Behavior Research Center (IBBRC)"></span></div>
+  <div class="brand"><b>Brain-Body Plasticity</b><span>10th International IBBRC Conference · Feb 23–25, 2027</span></div>
+  <span class="prelim">{{BADGE}}</span>
+</div></header>
+
+<nav class="tabs" aria-label="Sections"><div class="wrap">
+  <a href="#program" data-v="program"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>Program</a>
+  <a href="#speakers" data-v="speakers"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>Speakers</a>
+  <a href="#posters" data-v="posters"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M9 8h6M9 12h6M9 16h3"/></svg>Posters</a><!--@speakers-->
+  <a href="#social" data-v="social"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 20l6-12 4 7 3-4 5 9z"/><circle cx="17" cy="5" r="2"/></svg>Tour</a><!--/@speakers-->
+  <a href="#info" data-v="info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-6.5-7-12a7 7 0 0 1 14 0c0 5.5-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>Venue</a>
+</div></nav>
+
+<main><div class="wrap" id="view"></div></main>
+
+<script>
+const SPK = {
+  schwartz:{n:"Michal Schwartz",a:"Weizmann Institute of Science",t:"The Brain-Body Immune Axis in Alzheimer's Disease: From Bench to Bedside",ab:"Nearly three decades ago, we challenged the prevailing view of the brain as an immune-isolated organ, demonstrating that systemic immunity is essential for brain maintenance and repair. This work established the brain-body immune axis as a key regulator of brain homeostasis, aging, and neurodegeneration. We proposed that brain aging reflects immune aging more than chronological age, characterized by impaired immune surveillance and accumulation of senescent immune cells. In Alzheimer's disease (AD), chronic neuroinflammation, driven in part by senescent microglia and systemic immune dysfunction, is a major contributor to disease progression. Building on these insights, we explored immune checkpoint modulation as a therapeutic strategy. We demonstrated that intermittent PD-L1 blockade restores immune competence, enhances CNS immune surveillance, and modifies disease progression in preclinical models of dementia. Notably, the earliest and most consistent effect was the selective elimination of senescent microglia, providing a mechanistic basis for therapeutic benefit. Translating these findings to the clinic, we developed an anti-PD-L1 antibody optimized for AD, which has successfully completed a Phase 1b clinical trial, demonstrating favorable safety and encouraging biomarker effects. These findings position immune checkpoint immunotherapy as a promising new approach to treating Alzheimer's disease."},
+  fried:{n:"Itzhak Fried",a:"UCLA"},
+  spiegel:{n:"Ivo Spiegel",a:"Weizmann Institute of Science"},
+  liraz:{n:"Sigal Liraz-Zaltsman",a:""},
+  umschweif:{n:"Gali Umschweif",a:"Hebrew University of Jerusalem"},
+  marco:{n:"Asaf Marco",a:"Hebrew University of Jerusalem",t:"QR2 as a Molecular Switch Between Survival and Plasticity in the Stressed Brain"},
+  margulies:{n:"Daniel Margulies",a:"University of Oxford"},
+  nenning:{n:"Karl-Heinz Nenning",a:"Medical University of Vienna",t:"Tracking Brain Organization in Health and Disease: From Static Connectivity to Brain Dynamics and Brain-Body Interactions",ab:"Understanding brain organization requires a shift from static snapshots of connectivity toward a dynamic, multi-modal framework that accounts for the brain's temporal fluctuations and its interaction with the body. This talk explores this evolution across the spectrum of health and neurological disease. We first demonstrate how functional connectivity fingerprints can be leveraged to address clinical challenges in epilepsy, such as using machine learning to predict cognitive outcomes, specifically language decline following anterior temporal lobe resection. Moving beyond static maps, we show that brain dynamics, quantified through local temporal features like autocorrelation decay, can non-invasively identify seizure onset zones, offering a promising tool for surgical planning. The utility of these dynamic markers extends to other conditions, such as pediatric stroke, where the prevalence and transitions of specific brain states serve as indicators of network disruption and cognitive impairment. Finally, we bridge the gap between neural activity and systemic physiology by illustrating how such fMRI-defined brain states relate to physiological signals like pupil dilation and EEG. Together, these studies argue for an integrated framework spanning connectivity, spatiotemporal dynamics, and brain-body interactions as a foundation for more precise and clinically actionable markers of brain health."},
+  ramot:{n:"Michal Ramot",a:"Weizmann Institute of Science"},
+  ovadia:{n:"Smadar Ovadia-Caro",a:"University of Haifa"},
+  javitt:{n:"Daniel C. Javitt",a:"Columbia University"},
+  herzog:{n:"Michael Herzog",a:"EPFL"},
+  maroun:{n:"Mouna Maroun",a:"University of Haifa"},
+  chen:{n:"Chen Ran",a:"Scripps Research",t:"The circuitry and coding of interoception",ab:"The interoceptive system enables the brain to detect signals from internal organs—stomach distension, intestinal nutrients, airway irritants, blood pressure, oxygen saturation—to maintain bodily homeostasis. The nucleus of the solitary tract (NTS) in the brainstem is the brain's primary interoceptive hub. It integrates and processes convergent sensory inputs from visceral organs via the vagus nerve and spinal cord, transmitting signals to higher-order brain regions to regulate behavior, physiology, and metabolism. Despite its importance, the principles by which the NTS organizes peripheral information to mediate these complex responses remain poorly understood. Here we develop a novel in vivo two-photon brainstem imaging platform, which allows us to record the activities of thousands of NTS neurons simultaneously. We discover that the NTS creates a map of internal organs that takes the shape of a \"visceral homunculus\". This topography requires brainstem inhibition, as blockade of inhibition broadens neuronal tuning and disrupts spatial organization. Combining brainstem imaging with genetic strategies to label targeted populations of NTS neurons, we show that the NTS creates parallel viscerosensory pathways. These pathways are distributed across the topographic map of internal organs and are similarly tuned to respond to various viscerosensory stimuli but differentially control behavior and metabolism. Our work establishes the conceptual framework of the organizational logic of the brainstem interoceptive circuits."},
+  blinder:{n:"Pablo Blinder",a:"Tel Aviv University"},
+  jammal:{n:"Luna Jammal",a:"University of Haifa"},
+  bennett:{n:"David A. Bennett",a:"Rush University"},
+  gould:{n:"Nathaniel Gould",a:"University of Oxford"},
+  slutsky:{n:"Inna Slutsky",a:"Tel Aviv University"},
+  kida:{n:"Satoshi Kida",a:"The University of Tokyo"},
+  kayal:{n:"Hanin Kayal",a:""},
+  livneh:{n:"Yoav Livneh",a:"Weizmann Institute of Science",t:"Brain-body interactions: sensations and predictions in the insular cortex",ab:"The continuous dialog between brain and body is essential for physical and mental health. How does cortical activity generate interoceptive sensations? How are internal and external information streams integrated to form predictions, and prepare the body for anticipated physiological changes? I will present our recent work combining non-invasive gut optogenetics for quantitative interoceptive psychophysics with insular cortex imaging, optogenetics, and endocrine measurements. Using this approach, we identify neural mechanisms underlying interoceptive perception and predictive learning in the insular cortex. We further demonstrate how these cortical predictions support anticipatory physiological regulation and long-term metabolic homeostasis."},
+  hummel:{n:"Thomas Hummel",a:"TU Dresden",t:"Clinical aspects of olfactory plasticity"},
+  rozenkrantz:{n:"Liron Rozenkrantz",a:"Bar-Ilan University",t:"Cognition at the service of physiological regulation? Voluntary attention regulates acute immune responses in humans",ab:"Physiological regulation is traditionally understood as relying on largely automatic mechanisms that maintain internal stability. Yet could voluntary cognitive processes, such as directing attention, also participate in regulating fundamental bodily functions? Across three preregistered experiments (N = 57), we investigated whether voluntary attention influences acute inflammatory responses in humans. Directing attention toward sensations at an inflammatory site reduced the magnitude of inflammation and accelerated recovery compared with distraction. These effects were accompanied by increased parasympathetic activity and persisted, albeit attenuated, following pharmacological reduction of sensory signaling. Together, these findings demonstrate that voluntary attention can regulate acute inflammation, suggesting that higher-order cognitive processes actively contribute to physiological regulation."},
+  avidan:{n:"Galia Avidan",a:"Ben-Gurion University of the Negev"},
+  admon:{n:"Roee Admon",a:"University of Haifa",t:"Coping with Trauma: New Insights from a Longitudinal Study of October 7 Music Festival Survivors"},
+  fogel:{n:"Irit Weissman-Fogel",a:"University of Haifa"},
+  costa:{n:"Mauro Costa-Mattioli",a:"Altos Labs"},
+  parvizi:{n:"Josef Parvizi",a:"Stanford University"}
+};
+const DAYS=[
+ {id:"d1",label:"Day 1",date:"Tue · Feb 23",slots:[
+  {t:"08:30–09:00",k:"break",title:"Coffee & registration"},
+  {t:"09:00–09:30",k:"plain",title:"Opening & welcome",talks:["maroun"]},
+  {t:"09:30–10:30",k:"keynote",kind:"Keynote",talks:["schwartz"]},
+  {t:"10:30–12:10",k:"session",kind:"Session 1",talks:["spiegel","liraz","umschweif","marco"]},
+  {t:"12:10–12:20",k:"break",title:"Coffee break"},
+  {t:"12:20–13:00",k:"plain",kind:"Special session",title:"AI session — debate"},
+  {t:"13:00–14:00",k:"break",title:"Lunch"},
+  {t:"14:00–15:40",k:"session",kind:"Session 2",talks:["margulies","nenning","ramot","ovadia"]},
+  {t:"15:40–16:10",k:"break",title:"Coffee break"},
+  {t:"16:10–17:00",k:"plain",kind:"Blitz",title:"Blitz talks"},
+  {t:"17:00–18:00",k:"plain",kind:"Posters",title:"Posters & blind dates",link:"#posters"}
+ ]},
+ {id:"d2",label:"Day 2",date:"Wed · Feb 24",slots:[
+  {t:"08:30–09:00",k:"break",title:"Coffee"},
+  {t:"09:00–10:00",k:"keynote",kind:"Plenary",talks:["costa"]},
+  {t:"10:00–11:40",k:"session",kind:"Session 3",title:"Brain-Body Psychiatry",talks:["javitt","herzog","maroun",null]},
+  {t:"11:40–13:00",k:"session",kind:"Session 4",talks:["chen",null,"blinder","jammal"]},
+  {t:"13:00–14:00",k:"break",title:"Lunch"}/*@speakers*/,
+  {t:"14:00–19:00",k:"social",kind:"Social program",title:"Speakers tour",link:"#social"},
+  {t:"19:00",k:"social",kind:"Social program",title:"Conference dinner"}/*/@speakers*/
+ ]},
+ {id:"d3",label:"Day 3",date:"Thu · Feb 25",slots:[
+  {t:"08:30–09:00",k:"break",title:"Coffee"},
+  {t:"09:00–10:40",k:"session",kind:"Session 5",talks:["bennett","gould","slutsky","kida"]},
+  {t:"10:40–12:00",k:"session",kind:"Session 6",talks:["kayal","livneh","hummel","parvizi"]},
+  {t:"12:00–13:00",k:"break",title:"Lunch"},
+  {t:"13:00–14:40",k:"session",kind:"Session 7",title:"Brain-Body Interactions",talks:["rozenkrantz","avidan","admon","fogel"]},
+  {t:"14:40–15:15",k:"keynote",kind:"Keynote",talks:["fried"]},
+  {t:"15:15–16:15",k:"plain",title:"Closing remarks & awards"}
+ ]}
+];
+const where={};DAYS.forEach(d=>d.slots.forEach(s=>(s.talks||[]).forEach(id=>{if(id)where[id]=`${d.date} · ${s.kind}${s.title?" · "+s.title:""}`})));
+
+let fav=new Set();try{fav=new Set(JSON.parse(localStorage.getItem("{{STORE}}-fav")||"[]"))}catch(e){}
+function saveFav(){try{localStorage.setItem("{{STORE}}-fav",JSON.stringify([...fav]))}catch(e){}}
+let day="d1";try{day=localStorage.getItem("{{STORE}}-day")||"d1"}catch(e){}
+let onlyFav=false;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const starSvg='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg>';
+const initials=n=>n.split(/[\s-]+/).filter(Boolean).map(w=>w[0]).slice(0,2).join("");
+
+function talkLi(id){
+  if(!id) return `<li><span class="who"><span class="tba">Speaker TBA</span></span></li>`;
+  const s=SPK[id];
+  return `<li><span class="who"><a href="#speakers" data-open="${id}">${esc(s.n)}</a><span class="tt">${s.t?esc(s.t):(s.a?esc(s.a):"")}</span></span>
+  <button class="star" data-fav="${id}" aria-pressed="${fav.has(id)}" aria-label="Add ${esc(s.n)} to my schedule">${starSvg}</button></li>`;
+}
+function renderProgram(){
+  const d=DAYS.find(x=>x.id===day)||DAYS[0];
+  const slots=d.slots.filter(s=>!onlyFav||(s.talks||[]).some(id=>id&&fav.has(id)));
+  return `<h1>Program</h1><p class="lede">Three days of talks on how brain and body shape each other. Times and speakers are preliminary and may change. Tap the star to build your own schedule.</p>
+  <div class="daypick" role="group" aria-label="Choose day">${DAYS.map(x=>`<button data-day="${x.id}" aria-pressed="${x.id===d.id}">${x.label}<small>${x.date}</small></button>`).join("")}</div>
+  <div class="filterbar"><button class="chip" id="onlyfav" aria-pressed="${onlyFav}">My schedule only</button></div>
+  <div class="timeline">${slots.length?slots.map(s=>`<div class="slot"><div class="time">${s.t}</div>
+   <div class="block ${s.k}">${s.kind?`<div class="kind">${esc(s.kind)}</div>`:""}${s.title?`<h2>${s.link?`<a href="${s.link}" style="color:inherit">${esc(s.title)}</a>`:esc(s.title)}</h2>`:""}
+   ${s.talks?`<ul class="talks">${s.talks.map(talkLi).join("")}</ul>`:""}</div></div>`).join("")
+   :`<div class="empty"><h2>No starred talks on this day</h2><p>Turn off “My schedule only”, then tap the star next to a talk to add it.</p></div>`}</div>`;
+}
+function renderSpeakers(q=""){
+  const ids=Object.keys(SPK).sort((a,b)=>SPK[a].n.split(" ").pop().localeCompare(SPK[b].n.split(" ").pop()));
+  const ql=q.trim().toLowerCase();
+  const list=ids.filter(id=>{const s=SPK[id];return !ql||(s.n+" "+(s.a||"")+" "+(s.t||"")).toLowerCase().includes(ql)});
+  return `<h1>Speakers</h1><p class="lede">${ids.length} speakers. Tap a name to read the talk title and abstract.</p>
+  <label for="q" class="mono" style="display:block;margin-bottom:6px;color:var(--muted)">Search by name, institution or topic</label>
+  <input id="q" class="search" type="search" value="${esc(q)}" placeholder="e.g. interoception, Weizmann">
+  <div class="cards">${list.map(id=>{const s=SPK[id];return `<details class="spk" id="spk-${id}"><summary><span class="avatar" aria-hidden="true">${initials(s.n)}</span>
+   <span class="meta"><b>${esc(s.n)}</b>${s.a?`<small>${esc(s.a)}</small>`:""}${where[id]?`<span class="when">${esc(where[id])}</span>`:""}</span>
+   <button class="star" data-fav="${id}" aria-pressed="${fav.has(id)}" aria-label="Add ${esc(s.n)} to my schedule">${starSvg}</button></summary>
+   <div class="abs">${s.t?`<h3>${esc(s.t)}</h3>`:`<h3 class="pending">Talk title to be announced</h3>`}${s.ab?`<p>${esc(s.ab)}</p>`:`<p class="pending">Abstract to be announced.</p>`}</div></details>`}).join("")||`<div class="empty"><h2>No speakers match “${esc(q)}”</h2><p>Try a shorter word or a last name.</p></div>`}</div>`;
+}
+function renderPosters(){
+  return `<h1>Posters</h1><p class="lede">The poster session runs on Day 1 (Tue · Feb 23), 17:00–18:00, together with “blind dates” between participants.</p>
+  <div class="empty"><h2>Posters will be listed here after registration closes</h2>
+  <p>Each poster will appear with its number, title, authors and abstract, and you will be able to search by topic or author.</p>
+  <ul><li>Poster abstracts are collected through the registration form</li><li>Poster numbers and board locations will be added before the conference</li></ul></div>`;
+}/*@speakers*/
+function renderSocial(){
+  return `<h1>Speakers tour</h1><p class="lede">An afternoon tour for invited speakers on Day 2, followed by dinner. This page is shared with invited speakers only.</p>
+  <div class="info-grid">
+   <div class="card"><div class="kind">When</div><h2>Wed · Feb 24, 14:00–19:00</h2><p>Meeting point to be announced.</p></div>
+   <div class="card"><div class="kind">Where</div><h2>Route to be announced</h2><p>The destination and itinerary are still being finalized. Details will appear here.</p></div>
+   <div class="card"><div class="kind">Evening</div><h2>Conference dinner · 19:00</h2><p>Location to be announced.</p></div>
+  </div>`;
+}/*/@speakers*/
+function renderInfo(){
+  return `<h1>Venue & info</h1><p class="lede">All sessions take place on the University of Haifa campus on Mount Carmel.</p>
+  <div class="info-grid">
+   <div class="card"><div class="kind">Main hall</div><h2>Spadia Hall</h2><p>Multi-Purpose Building, University of Haifa</p><p><a href="https://www.google.com/maps/search/?api=1&query=University+of+Haifa" target="_blank" rel="noopener">Open in Google Maps</a></p></div>
+   <div class="card"><div class="kind">Dates</div><h2>Feb 23–25, 2027</h2><p>Tuesday to Thursday. Registration opens at 08:30 on Day 1.</p></div>
+   <div class="card"><div class="kind">Registration</div><h2>Free registration</h2><p>Registration is through an online form. Link to be added.</p></div>
+   <div class="card"><div class="kind">Contact</div><h2>IBBRC office</h2><p class="mono" style="user-select:all">ibbrc@labs.hevra.haifa.ac.il</p></div>
+   <div class="card"><div class="kind">Organizing committee</div><h2>Kobi Rosenblum, Smadar Ovadia-Caro, Luna Jammal</h2><p>The Integrative Brain and Behavior Research Center (IBBRC)</p></div>
+  </div>
+  <p class="note">This is a preliminary program. Speakers, times and rooms may change before the conference.</p>`;
+}
+const VIEWS={program:renderProgram,speakers:renderSpeakers,posters:renderPosters,/*@speakers*/social:renderSocial,/*/@speakers*/info:renderInfo};
+let qval="";
+function route(){
+  let v=(location.hash||"#program").slice(1).split("-")[0];
+  if(!VIEWS[v]) v="program";
+  document.querySelectorAll("nav.tabs a").forEach(a=>{if(a.dataset.v===v)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current")});
+  document.getElementById("view").innerHTML=v==="speakers"?renderSpeakers(qval):VIEWS[v]();
+  if(v==="speakers") bindSearch();
+}
+function bindSearch(){const q=document.getElementById("q");if(!q)return;q.addEventListener("input",e=>{qval=e.target.value;const pos=q.selectionStart;document.getElementById("view").innerHTML=renderSpeakers(qval);const nq=document.getElementById("q");nq.focus();nq.setSelectionRange(pos,pos);bindSearch()})}
+document.addEventListener("click",e=>{
+  const st=e.target.closest("[data-fav]");
+  if(st){e.preventDefault();e.stopPropagation();const id=st.dataset.fav;fav.has(id)?fav.delete(id):fav.add(id);saveFav();document.querySelectorAll(`[data-fav="${id}"]`).forEach(b=>b.setAttribute("aria-pressed",fav.has(id)));if(onlyFav&&location.hash!=="#speakers")route();return}
+  const dp=e.target.closest("[data-day]");
+  if(dp){day=dp.dataset.day;try{localStorage.setItem("{{STORE}}-day",day)}catch(e){}route();return}
+  if(e.target.closest("#onlyfav")){onlyFav=!onlyFav;route();return}
+  const op=e.target.closest("[data-open]");
+  if(op){e.preventDefault();qval="";const id=op.dataset.open;location.hash="#speakers";setTimeout(()=>{const d=document.getElementById("spk-"+id);if(d){d.open=true;d.scrollIntoView({block:"start",behavior:"smooth"})}},30)}
+});
+window.addEventListener("hashchange",route);
+route();
+</script>
+
+</body>
+</html>
