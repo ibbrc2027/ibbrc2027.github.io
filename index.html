@@ -68,7 +68,8 @@ p.lede{color:var(--muted);margin:0 0 14px;max-width:65ch;font-size:.92rem}
 .daypick button small{font:500 .7rem/1.2 var(--body);letter-spacing:.01em}
 .daypick button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(25,52,69,.15)}
 .daypick button .today{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--accent);margin-left:4px;vertical-align:middle}
-.filterbar{display:flex;gap:8px;align-items:center;margin:2px 0 12px;flex-wrap:wrap}
+.filterbar{display:flex;gap:4px 10px;align-items:center;margin:2px 0 12px;flex-wrap:wrap}
+.savenote{font-size:.78rem;color:var(--muted)}
 .chip{font:600 .82rem var(--body);border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:6px 12px;border-radius:999px;cursor:pointer;touch-action:manipulation}
 .chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
 /* Program */
@@ -250,7 +251,7 @@ function renderProgram(){
   const badge=x=>x==="now"?`<span class="live">Now</span>`:x==="next"?`<span class="live next">Next</span>`:"";
   return `<h1>Program</h1><p class="lede">Preliminary program: times and speakers may change. Tap ★ to build your own schedule.</p>
   <div class="daybar"><div class="daypick" role="group" aria-label="Choose day">${DAYS.map(x=>`<button data-day="${x.id}" aria-pressed="${x.id===d.id}">${x.label}<small>${x.date}${x.id===tid?`<span class="today" title="Today"></span>`:""}</small></button>`).join("")}</div></div>
-  <div class="filterbar"><button class="chip" id="onlyfav" aria-pressed="${onlyFav}">★ My schedule only</button></div>
+  <div class="filterbar"><button class="chip" id="onlyfav" aria-pressed="${onlyFav}">★ My schedule only</button><span class="savenote">Your stars are saved only on this phone</span></div>
   <div class="timeline">${slots.length?slots.map(([s,x])=>s.k==="break"
    ?`<div class="slot brk${x?" is-"+x:""}"><span class="time">${s.t}</span><span>${esc(s.title)}</span>${badge(x)}</div>`
    :`<div class="slot${x?" is-"+x:""}"><div class="block ${s.k}"><div class="head"><span>${s.t}</span>${s.kind?`<span class="dot">·</span><span class="kind">${esc(s.kind)}</span>`:""}${badge(x)}</div>${s.title?`<h2>${s.link?`<a href="${s.link}" style="color:inherit">${esc(s.title)}</a>`:esc(s.title)}</h2>`:""}
