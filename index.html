@@ -57,10 +57,6 @@ a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{o
   nav.tabs a{flex-direction:row;justify-content:center;gap:8px;font-size:.9rem}
   nav.tabs a svg{width:18px;height:18px}
 }
-/* computers (mouse) with a wide window: wider column instead of the phone-width one (as in Ramzor Milim) */
-@media (hover:hover) and (pointer:fine) and (min-width:900px){
-  .wrap{max-width:1100px}
-}
 main .wrap{padding-block:16px 28px}
 h1{font:700 1.5rem/1.15 var(--display);margin:0 0 4px;text-wrap:balance}
 h2{font:700 1.08rem/1.25 var(--display);margin:0;text-wrap:balance}
@@ -134,6 +130,35 @@ details.spk summary::-webkit-details-marker{display:none}
 .kind{font:500 .68rem/1 var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--teal);margin-bottom:6px}
 .mono{font-family:var(--mono);font-size:.88rem}
 .note{margin-top:18px;font-size:.85rem;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+/* Each tab = side (title, intro, day switch, filters) + main column. On phones the side is not a box of its own, so the page reads top to bottom as before */
+.side{display:contents}
+/* Computers (mouse, window >= 1000px), as in Ramzor Milim: wider page, side panel on the left that stays on screen, time in its own column, slightly bigger text */
+@media (hover:hover) and (pointer:fine) and (min-width:1000px){
+  html{font-size:106.25%}
+  body{font-size:17px}
+  .wrap{max-width:1120px}
+  main .wrap{padding-block:24px 40px}
+  .page{display:grid;grid-template-columns:270px minmax(0,1fr);gap:36px;align-items:start}
+  .side{display:block;position:sticky;top:calc(var(--navh) + 24px)}
+  h1{font-size:1.7rem}
+  .side p.lede{margin-bottom:18px}
+  .daybar{position:static;margin:0 0 12px;padding:0;background:none}
+  .daypick,.daypick.four{grid-template-columns:1fr}
+  .daypick button{flex-direction:row;justify-content:space-between;align-items:baseline;padding:10px 14px;font-size:1rem;text-align:left}
+  .daypick button small{font-size:.78rem}
+  .filterbar{margin:0}
+  .block{display:grid;grid-template-columns:118px minmax(0,1fr);column-gap:16px;padding:14px}
+  .block>*{grid-column:2}
+  .block>.head{grid-column:1;grid-row:1/span 9;flex-direction:column;align-items:flex-start;gap:4px;margin:0;font-size:.8rem}
+  .block>.head .dot{display:none}
+  .block>.head .live{margin-left:0}
+  .block>h2{margin-bottom:2px}
+  .talks{margin-top:0}
+  .talks li:first-child{padding-top:0}
+  .brk .time{width:139px;font-size:.8rem}
+  .who .tt{font-size:.9rem}
+  .star{margin-right:0}
+}
 </style>
 
 <header class="top"><div class="wrap">
@@ -149,7 +174,7 @@ details.spk summary::-webkit-details-marker{display:none}
   <a href="#info" data-v="info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>Info</a>
 </div></nav>
 
-<main><div class="wrap" id="view"></div></main>
+<main><div class="wrap page" id="view"></div></main>
 
 <script>
 const SPK = {
@@ -253,14 +278,14 @@ function renderProgram(){
   const st=slotStatus(d),tid=todayId();
   const slots=d.slots.map((s,i)=>[s,st[i]]).filter(([s])=>!onlyFav||(s.talks||[]).some(id=>id&&fav.has(id)));
   const badge=x=>x==="now"?`<span class="live">Now</span>`:x==="next"?`<span class="live next">Next</span>`:"";
-  return `<h1>Program</h1><p class="lede">Preliminary program: times and speakers may change. Tap ★ to build your own schedule.</p>
+  return `<aside class="side"><h1>Program</h1><p class="lede">Preliminary program: times and speakers may change. Tap ★ to build your own schedule.</p>
   <div class="daybar"><div class="daypick" role="group" aria-label="Choose day">${DAYS.map(x=>`<button data-day="${x.id}" aria-pressed="${x.id===d.id}">${x.label}<small>${x.date}${x.id===tid?`<span class="today" title="Today"></span>`:""}</small></button>`).join("")}</div></div>
-  <div class="filterbar"><button class="chip" id="onlyfav" aria-pressed="${onlyFav}">★ My schedule only</button><span class="savenote">Your stars are saved only on this phone</span></div>
-  <div class="timeline">${slots.length?slots.map(([s,x])=>s.k==="break"
+  <div class="filterbar"><button class="chip" id="onlyfav" aria-pressed="${onlyFav}">★ My schedule only</button><span class="savenote">Your stars are saved only on this device</span></div></aside>
+  <div class="maincol"><div class="timeline">${slots.length?slots.map(([s,x])=>s.k==="break"
    ?`<div class="slot brk${x?" is-"+x:""}"><span class="time">${s.t}</span><span>${esc(s.title)}</span>${badge(x)}</div>`
    :`<div class="slot${x?" is-"+x:""}"><div class="block ${s.k}"><div class="head"><span>${s.t}</span>${s.kind?`<span class="dot">·</span><span class="kind">${esc(s.kind)}</span>`:""}${badge(x)}</div>${s.title?`<h2>${s.link?`<a href="${s.link}" style="color:inherit">${esc(s.title)}</a>`:esc(s.title)}</h2>`:""}
    ${s.talks?`<ul class="talks">${s.talks.map(talkLi).join("")}</ul>`:""}</div></div>`).join("")
-   :`<div class="empty"><h2>No starred talks on this day</h2><p>Turn off “My schedule only”, then tap the star next to a talk to add it.</p></div>`}</div>`;
+   :`<div class="empty"><h2>No starred talks on this day</h2><p>Turn off “My schedule only”, then tap the star next to a talk to add it.</p></div>`}</div></div>`;
 }
 /* Speakers in the order they speak (from DAYS). sday = "all" or a day id. */
 let sday=null;
@@ -281,30 +306,30 @@ function renderSpeakers(q=""){
   const ql=q.trim().toLowerCase();
   const list=speakerOrder(sday).filter(({id})=>{const s=SPK[id];return !ql||(s.n+" "+(s.a||"")+" "+(s.t||"")).toLowerCase().includes(ql)});
   const tid=todayId();
-  return `<h1>Speakers</h1><p class="lede">${all} speakers, in the order they speak. Tap a name to read the talk title and abstract.</p>
+  return `<aside class="side"><h1>Speakers</h1><p class="lede">${all} speakers, in the order they speak. Tap a name to read the talk title and abstract.</p>
   <div class="daybar"><div class="daypick four" role="group" aria-label="Choose day">${[...DAYS,{id:"all",label:"All",date:"3 days"}].map(x=>`<button data-sday="${x.id}" aria-pressed="${x.id===sday}">${x.label}<small>${x.date}${x.id===tid?`<span class="today" title="Today"></span>`:""}</small></button>`).join("")}</div></div>
   <label for="q" class="mono" style="display:block;margin-bottom:6px;color:var(--muted)">Search by name, institution or topic</label>
-  <input id="q" class="search" type="search" value="${esc(q)}" placeholder="e.g. interoception, Weizmann">
-  <div class="cards">${list.map(({id,when})=>{const s=SPK[id];return `<details class="spk" id="spk-${id}"><summary><span class="avatar" aria-hidden="true">${initials(s.n)}</span>
+  <input id="q" class="search" type="search" value="${esc(q)}" placeholder="e.g. interoception, Weizmann"></aside>
+  <div class="maincol"><div class="cards">${list.map(({id,when})=>{const s=SPK[id];return `<details class="spk" id="spk-${id}"><summary><span class="avatar" aria-hidden="true">${initials(s.n)}</span>
    <span class="meta"><b>${esc(s.n)}</b>${s.a?`<small>${esc(s.a)}</small>`:""}${when?`<span class="when">${esc(when)}</span>`:""}</span>
    <button class="star" data-fav="${id}" aria-pressed="${fav.has(id)}" aria-label="Add ${esc(s.n)} to my schedule">${starSvg}</button></summary>
-   <div class="abs">${s.t?`<h3>${esc(s.t)}</h3>`:`<h3 class="pending">Talk title to be announced</h3>`}${s.ab?`<p>${esc(s.ab)}</p>`:`<p class="pending">Abstract to be announced.</p>`}</div></details>`}).join("")||`<div class="empty"><h2>No speakers match “${esc(q)}”</h2><p>Try a shorter word or a last name.</p></div>`}</div>`;
+   <div class="abs">${s.t?`<h3>${esc(s.t)}</h3>`:`<h3 class="pending">Talk title to be announced</h3>`}${s.ab?`<p>${esc(s.ab)}</p>`:`<p class="pending">Abstract to be announced.</p>`}</div></details>`}).join("")||`<div class="empty"><h2>No speakers match “${esc(q)}”</h2><p>Try a shorter word or a last name.</p></div>`}</div></div>`;
 }
 function renderPosters(){
-  return `<h1>Posters</h1><p class="lede">The poster session runs on Day 1 (Tue · Feb 23), 17:00–18:00, together with “blind dates” between participants.</p>
-  <div class="empty"><h2>Posters will be listed here after registration closes</h2>
+  return `<aside class="side"><h1>Posters</h1><p class="lede">The poster session runs on Day 1 (Tue · Feb 23), 17:00–18:00, together with “blind dates” between participants.</p></aside>
+  <div class="maincol"><div class="empty"><h2>Posters will be listed here after registration closes</h2>
   <p>Each poster will appear with its number, title, authors and abstract, and you will be able to search by topic or author.</p>
-  <ul><li>Poster abstracts are collected through the registration form</li><li>Poster numbers and board locations will be added before the conference</li></ul></div>`;
+  <ul><li>Poster abstracts are collected through the registration form</li><li>Poster numbers and board locations will be added before the conference</li></ul></div></div>`;
 }
 function renderInfo(){
-  return `<h1>Info</h1><p class="lede">All sessions take place on the University of Haifa campus on Mount Carmel.</p>
-  <div class="info-grid">
+  return `<aside class="side"><h1>Info</h1><p class="lede">All sessions take place on the University of Haifa campus on Mount Carmel.</p></aside>
+  <div class="maincol"><div class="info-grid">
    <div class="card"><div class="kind">Getting there</div><h2>Spadia Hall</h2><p>Multi-Purpose Building, University of Haifa</p><p><a href="https://www.google.com/maps/search/?api=1&query=University+of+Haifa" target="_blank" rel="noopener">Open in Google Maps</a></p></div>
    <div class="card"><div class="kind">Dates</div><h2>Feb 23–25, 2027</h2><p>Tuesday to Thursday. Registration opens at 08:30 on Day 1.</p></div>
    <div class="card"><div class="kind">Contact</div><h2>IBBRC office</h2><p><a href="mailto:ibbrc@labs.hevra.haifa.ac.il">ibbrc@labs.hevra.haifa.ac.il</a></p></div>
    <div class="card"><div class="kind">Organizers</div><h2>Organizing committee</h2><p>Kobi Rosenblum, Smadar Ovadia-Caro, Luna Jammal</p><p>The Integrative Brain and Behavior Research Center (IBBRC)</p></div>
   </div>
-  <p class="note">This is a preliminary program. Speakers, times and rooms may change before the conference.</p>`;
+  <p class="note">This is a preliminary program. Speakers, times and rooms may change before the conference.</p></div>`;
 }
 const VIEWS={program:renderProgram,speakers:renderSpeakers,posters:renderPosters,info:renderInfo};
 let qval="",curView=null,openId=null;
