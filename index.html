@@ -104,7 +104,7 @@ p.lede{color:var(--muted);margin:0 0 14px;max-width:65ch;font-size:.92rem}
 /* Speakers */
 .search{width:100%;font:16px var(--body);padding:11px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);margin-bottom:12px;box-shadow:var(--shadow)}
 .cards{display:flex;flex-direction:column;gap:10px}
-details.spk{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;box-shadow:var(--shadow)}
+details.spk{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;box-shadow:var(--shadow);scroll-margin-top:calc(12px + var(--navh))}
 details.spk summary{cursor:pointer;list-style:none;display:flex;gap:12px;align-items:flex-start}
 details.spk summary::-webkit-details-marker{display:none}
 .avatar{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font:700 .9rem var(--display);background:var(--teal-soft);color:var(--teal)}
@@ -287,23 +287,28 @@ function renderInfo(){
   <p class="note">This is a preliminary program. Speakers, times and rooms may change before the conference.</p>`;
 }
 const VIEWS={program:renderProgram,speakers:renderSpeakers,posters:renderPosters,info:renderInfo};
-let qval="";
+let qval="",curView=null,openId=null;
 function route(){
   let v=(location.hash||"#program").slice(1).split("-")[0];
   if(!VIEWS[v]) v="program";
   document.querySelectorAll("nav.tabs a").forEach(a=>{if(a.dataset.v===v)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current")});
   document.getElementById("view").innerHTML=v==="speakers"?renderSpeakers(qval):VIEWS[v]();
   if(v==="speakers") bindSearch();
+  if(curView!==null&&curView!==v) window.scrollTo(0,0);   /* new tab: start at the top of the page */
+  curView=v;
+  if(v==="speakers"&&openId){const d=document.getElementById("spk-"+openId);openId=null;if(d){d.open=true;d.scrollIntoView({block:"start"})}}
 }
 function bindSearch(){const q=document.getElementById("q");if(!q)return;q.addEventListener("input",e=>{qval=e.target.value;const pos=q.selectionStart;document.getElementById("view").innerHTML=renderSpeakers(qval);const nq=document.getElementById("q");nq.focus();nq.setSelectionRange(pos,pos);bindSearch()})}
 document.addEventListener("click",e=>{
   const st=e.target.closest("[data-fav]");
   if(st){e.preventDefault();e.stopPropagation();const id=st.dataset.fav;fav.has(id)?fav.delete(id):fav.add(id);saveFav();document.querySelectorAll(`[data-fav="${id}"]`).forEach(b=>b.setAttribute("aria-pressed",fav.has(id)));if(onlyFav&&location.hash!=="#speakers")route();return}
   const dp=e.target.closest("[data-day]");
-  if(dp){day=dp.dataset.day;try{localStorage.setItem("ibbrc27-day",day)}catch(e){}route();return}
+  if(dp){day=dp.dataset.day;try{localStorage.setItem("ibbrc27-day",day)}catch(e){}route();window.scrollTo(0,0);return}
+  const tab=e.target.closest("nav.tabs a");
+  if(tab&&tab.getAttribute("href")===(location.hash||"#program")){e.preventDefault();window.scrollTo(0,0);return}
   if(e.target.closest("#onlyfav")){onlyFav=!onlyFav;route();return}
   const op=e.target.closest("[data-open]");
-  if(op){e.preventDefault();qval="";const id=op.dataset.open;location.hash="#speakers";setTimeout(()=>{const d=document.getElementById("spk-"+id);if(d){d.open=true;d.scrollIntoView({block:"start",behavior:"smooth"})}},30)}
+  if(op){e.preventDefault();qval="";openId=op.dataset.open;if(location.hash==="#speakers")route();else location.hash="#speakers"}
 });
 window.addEventListener("hashchange",route);
 const tid0=todayId();if(tid0)day=tid0;
