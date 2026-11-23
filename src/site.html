@@ -64,6 +64,7 @@ p.lede{color:var(--muted);margin:0 0 14px;max-width:65ch;font-size:.92rem}
 /* Day switcher: segmented control that stays at the top while scrolling */
 .daybar{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--navh));z-index:4;background:var(--bg);margin:0 -16px;padding:8px 16px 10px}
 .daypick{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:#e4edf2;border-radius:14px;padding:4px}
+.daypick.four{grid-template-columns:repeat(4,1fr)}
 .daypick button{font:600 .95rem/1.15 var(--body);border:0;background:transparent;color:var(--muted);border-radius:10px;padding:7px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:1px;touch-action:manipulation}
 .daypick button small{font:500 .7rem/1.2 var(--body);letter-spacing:.01em}
 .daypick button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(25,52,69,.15)}
@@ -212,7 +213,6 @@ const DAYS=[
   {t:"15:15–16:15",k:"plain",title:"Closing remarks & awards"}
  ]}
 ];
-const where={};DAYS.forEach(d=>d.slots.forEach(s=>(s.talks||[]).forEach(id=>{if(id)where[id]=`${d.date} · ${s.kind}${s.title?" · "+s.title:""}`})));
 
 let fav=new Set();try{fav=new Set(JSON.parse(localStorage.getItem("{{STORE}}-fav")||"[]"))}catch(e){}
 function saveFav(){try{localStorage.setItem("{{STORE}}-fav",JSON.stringify([...fav]))}catch(e){}}
@@ -261,15 +261,31 @@ function renderProgram(){
    ${s.talks?`<ul class="talks">${s.talks.map(talkLi).join("")}</ul>`:""}</div></div>`).join("")
    :`<div class="empty"><h2>No starred talks on this day</h2><p>Turn off “My schedule only”, then tap the star next to a talk to add it.</p></div>`}</div>`;
 }
+/* Speakers in the order they speak (from DAYS). sday = "all" or a day id. */
+let sday=null;
+function speakerOrder(dayId){
+  const out=[],seen={};
+  DAYS.filter(d=>dayId==="all"||d.id===dayId).forEach(d=>d.slots.forEach(s=>(s.talks||[]).forEach(id=>{
+    if(!id||!SPK[id])return;
+    const w=`${dayId==="all"?d.label+" · ":""}${s.t} · ${s.kind||s.title||""}`;
+    if(seen[id]){seen[id].when+=" / "+w;return}
+    seen[id]={id,when:w};out.push(seen[id]);
+  })));
+  if(dayId==="all") Object.keys(SPK).filter(id=>!seen[id]).forEach(id=>out.push({id,when:""}));
+  return out;
+}
 function renderSpeakers(q=""){
-  const ids=Object.keys(SPK).sort((a,b)=>SPK[a].n.split(" ").pop().localeCompare(SPK[b].n.split(" ").pop()));
+  if(sday===null) sday=todayId()||"all";
+  const all=Object.keys(SPK).length;
   const ql=q.trim().toLowerCase();
-  const list=ids.filter(id=>{const s=SPK[id];return !ql||(s.n+" "+(s.a||"")+" "+(s.t||"")).toLowerCase().includes(ql)});
-  return `<h1>Speakers</h1><p class="lede">${ids.length} speakers. Tap a name to read the talk title and abstract.</p>
+  const list=speakerOrder(sday).filter(({id})=>{const s=SPK[id];return !ql||(s.n+" "+(s.a||"")+" "+(s.t||"")).toLowerCase().includes(ql)});
+  const tid=todayId();
+  return `<h1>Speakers</h1><p class="lede">${all} speakers, in the order they speak. Tap a name to read the talk title and abstract.</p>
+  <div class="daybar"><div class="daypick four" role="group" aria-label="Choose day">${[{id:"all",label:"All",date:"3 days"},...DAYS].map(x=>`<button data-sday="${x.id}" aria-pressed="${x.id===sday}">${x.label}<small>${x.date}${x.id===tid?`<span class="today" title="Today"></span>`:""}</small></button>`).join("")}</div></div>
   <label for="q" class="mono" style="display:block;margin-bottom:6px;color:var(--muted)">Search by name, institution or topic</label>
   <input id="q" class="search" type="search" value="${esc(q)}" placeholder="e.g. interoception, Weizmann">
-  <div class="cards">${list.map(id=>{const s=SPK[id];return `<details class="spk" id="spk-${id}"><summary><span class="avatar" aria-hidden="true">${initials(s.n)}</span>
-   <span class="meta"><b>${esc(s.n)}</b>${s.a?`<small>${esc(s.a)}</small>`:""}${where[id]?`<span class="when">${esc(where[id])}</span>`:""}</span>
+  <div class="cards">${list.map(({id,when})=>{const s=SPK[id];return `<details class="spk" id="spk-${id}"><summary><span class="avatar" aria-hidden="true">${initials(s.n)}</span>
+   <span class="meta"><b>${esc(s.n)}</b>${s.a?`<small>${esc(s.a)}</small>`:""}${when?`<span class="when">${esc(when)}</span>`:""}</span>
    <button class="star" data-fav="${id}" aria-pressed="${fav.has(id)}" aria-label="Add ${esc(s.n)} to my schedule">${starSvg}</button></summary>
    <div class="abs">${s.t?`<h3>${esc(s.t)}</h3>`:`<h3 class="pending">Talk title to be announced</h3>`}${s.ab?`<p>${esc(s.ab)}</p>`:`<p class="pending">Abstract to be announced.</p>`}</div></details>`}).join("")||`<div class="empty"><h2>No speakers match “${esc(q)}”</h2><p>Try a shorter word or a last name.</p></div>`}</div>`;
 }
@@ -315,12 +331,14 @@ document.addEventListener("click",e=>{
   const st=e.target.closest("[data-fav]");
   if(st){e.preventDefault();e.stopPropagation();const id=st.dataset.fav;fav.has(id)?fav.delete(id):fav.add(id);saveFav();document.querySelectorAll(`[data-fav="${id}"]`).forEach(b=>b.setAttribute("aria-pressed",fav.has(id)));if(onlyFav&&location.hash!=="#speakers")route();return}
   const dp=e.target.closest("[data-day]");
+  const sd=e.target.closest("[data-sday]");
+  if(sd){sday=sd.dataset.sday;route();window.scrollTo(0,0);return}
   if(dp){day=dp.dataset.day;try{localStorage.setItem("{{STORE}}-day",day)}catch(e){}route();window.scrollTo(0,0);return}
   const tab=e.target.closest("nav.tabs a");
   if(tab&&tab.getAttribute("href")===(location.hash||"#program")){e.preventDefault();window.scrollTo(0,0);return}
   if(e.target.closest("#onlyfav")){onlyFav=!onlyFav;route();return}
   const op=e.target.closest("[data-open]");
-  if(op){e.preventDefault();qval="";openId=op.dataset.open;if(location.hash==="#speakers")route();else location.hash="#speakers"}
+  if(op){e.preventDefault();qval="";openId=op.dataset.open;sday=day;if(location.hash==="#speakers")route();else location.hash="#speakers"}
 });
 window.addEventListener("hashchange",route);
 const tid0=todayId();if(tid0)day=tid0;
