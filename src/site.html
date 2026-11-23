@@ -31,14 +31,17 @@ body{color:var(--ink);font:16px/1.5 var(--body);padding-bottom:calc(68px + env(s
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--navy)}
 .wrap{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 header.top{background:var(--navy);color:#fff;border-bottom:3px solid var(--accent)}
-header.top .wrap{padding-block:10px;display:flex;align-items:center;gap:12px}
-.plate{background:var(--plate);border-radius:8px;padding:3px 6px;line-height:0;flex:none}
-header.top .ib{height:28px;width:auto;display:block}
-.brand{display:flex;flex-direction:column;min-width:0;flex:1}
-.brand b{font:700 1.05rem/1.15 var(--display)}
-.brand span{font-size:.78rem;line-height:1.3;color:var(--light)}
-.prelim{font:500 .62rem/1.2 var(--mono);letter-spacing:.06em;text-transform:uppercase;background:var(--accent);color:var(--on-accent);padding:4px 6px;border-radius:4px;flex:none;max-width:9em;text-align:center}
-@media (max-width:560px){header.top .plate{display:none}}
+header.top .wrap{padding-block:10px;display:flex;align-items:center;gap:10px 16px;flex-wrap:wrap}
+.logos{display:flex;align-items:center;gap:12px;flex-wrap:wrap;width:100%}
+.logos .uh{height:46px;width:auto;display:block}
+.plate{background:var(--plate);border-radius:8px;padding:4px 8px;line-height:0}
+.logos .ib{height:38px;width:auto;display:block}
+@media (max-width:520px){.logos .uh{height:36px}.logos .ib{height:30px}}
+.brand{display:flex;flex-direction:column;min-width:0}
+.brand b{font:700 1.15rem/1.15 var(--display);letter-spacing:.01em}
+.brand span{font-size:.85rem;color:var(--light)}
+header.top .prelim{margin-left:auto}
+.prelim{font:500 .7rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;background:var(--accent);color:var(--on-accent);padding:6px 8px;border-radius:4px;white-space:nowrap}
 nav.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);box-shadow:0 -2px 12px rgba(25,52,69,.06);z-index:6;padding-bottom:env(safe-area-inset-bottom,0px)}
 nav.tabs .wrap{display:grid;grid-template-columns:repeat({{NTABS}},1fr);gap:4px;padding-block:6px}
 nav.tabs a{display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--muted);font:600 .72rem/1.2 var(--body);padding:6px 2px;border-radius:12px}
@@ -124,14 +127,11 @@ details.spk summary::-webkit-details-marker{display:none}
 .card a{color:var(--teal);font-weight:600}
 .kind{font:500 .68rem/1 var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--teal);margin-bottom:6px}
 .mono{font-family:var(--mono);font-size:.88rem}
-.hosts{margin-top:14px;background:var(--navy);border-radius:14px;padding:16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.hosts .uh{height:42px;width:auto;display:block}
-.hosts .ib{height:34px;width:auto;display:block}
 .note{margin-top:18px;font-size:.85rem;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
 </style>
 
 <header class="top"><div class="wrap">
-  <span class="plate"><img class="ib" src="img/ibbrc.jpg" alt="IBBRC"></span>
+  <div class="logos"><img class="uh" src="img/uhaifa-white.jpg" alt="University of Haifa"><span class="plate"><img class="ib" src="img/ibbrc.jpg" alt="The Integrative Brain and Behavior Research Center (IBBRC)"></span></div>
   <div class="brand"><b>Brain-Body Plasticity</b><span>10th International IBBRC Conference · Feb 23–25, 2027</span></div>
   <span class="prelim">{{BADGE}}</span>
 </div></header>
@@ -295,7 +295,6 @@ function renderInfo(){
    <div class="card"><div class="kind">Contact</div><h2>IBBRC office</h2><p class="mono" style="user-select:all">ibbrc@labs.hevra.haifa.ac.il</p></div>
    <div class="card"><div class="kind">Organizing committee</div><h2>Kobi Rosenblum, Smadar Ovadia-Caro, Luna Jammal</h2><p>The Integrative Brain and Behavior Research Center (IBBRC)</p></div>
   </div>
-  <div class="hosts"><img class="uh" src="img/uhaifa-white.jpg" alt="University of Haifa"><span class="plate"><img class="ib" src="img/ibbrc.jpg" alt="The Integrative Brain and Behavior Research Center (IBBRC)"></span></div>
   <p class="note">This is a preliminary program. Speakers, times and rooms may change before the conference.</p>`;
 }
 const VIEWS={program:renderProgram,speakers:renderSpeakers,posters:renderPosters,/*@speakers*/social:renderSocial,/*/@speakers*/info:renderInfo};
