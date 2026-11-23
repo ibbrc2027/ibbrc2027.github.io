@@ -57,6 +57,10 @@ a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{o
   nav.tabs a{flex-direction:row;justify-content:center;gap:8px;font-size:.9rem}
   nav.tabs a svg{width:18px;height:18px}
 }
+/* computers (mouse) with a wide window: wider column instead of the phone-width one (as in Ramzor Milim) */
+@media (hover:hover) and (pointer:fine) and (min-width:900px){
+  .wrap{max-width:1100px}
+}
 main .wrap{padding-block:16px 28px}
 h1{font:700 1.5rem/1.15 var(--display);margin:0 0 4px;text-wrap:balance}
 h2{font:700 1.08rem/1.25 var(--display);margin:0;text-wrap:balance}
@@ -278,7 +282,7 @@ function renderSpeakers(q=""){
   const list=speakerOrder(sday).filter(({id})=>{const s=SPK[id];return !ql||(s.n+" "+(s.a||"")+" "+(s.t||"")).toLowerCase().includes(ql)});
   const tid=todayId();
   return `<h1>Speakers</h1><p class="lede">${all} speakers, in the order they speak. Tap a name to read the talk title and abstract.</p>
-  <div class="daybar"><div class="daypick four" role="group" aria-label="Choose day">${[{id:"all",label:"All",date:"3 days"},...DAYS].map(x=>`<button data-sday="${x.id}" aria-pressed="${x.id===sday}">${x.label}<small>${x.date}${x.id===tid?`<span class="today" title="Today"></span>`:""}</small></button>`).join("")}</div></div>
+  <div class="daybar"><div class="daypick four" role="group" aria-label="Choose day">${[...DAYS,{id:"all",label:"All",date:"3 days"}].map(x=>`<button data-sday="${x.id}" aria-pressed="${x.id===sday}">${x.label}<small>${x.date}${x.id===tid?`<span class="today" title="Today"></span>`:""}</small></button>`).join("")}</div></div>
   <label for="q" class="mono" style="display:block;margin-bottom:6px;color:var(--muted)">Search by name, institution or topic</label>
   <input id="q" class="search" type="search" value="${esc(q)}" placeholder="e.g. interoception, Weizmann">
   <div class="cards">${list.map(({id,when})=>{const s=SPK[id];return `<details class="spk" id="spk-${id}"><summary><span class="avatar" aria-hidden="true">${initials(s.n)}</span>
