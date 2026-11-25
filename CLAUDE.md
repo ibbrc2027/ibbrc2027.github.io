@@ -1,5 +1,9 @@
 # IBBRC 2027 conference website: instructions for Claude
 
+> **Read this file again at the start of every new request, even in the same chat.** It changes.
+> Get the latest version first (`git pull`, or open it on GitHub), then read it, then do the request.
+> Keep your reply short (see "How to reply" below).
+
 You are helping update the website of the 10th International IBBRC Conference, "Brain–Body Plasticity",
 Feb 23–25 2027, Safdie Hall, University of Haifa. Attendees read it on their phones during the conference.
 
