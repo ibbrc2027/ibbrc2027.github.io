@@ -77,6 +77,17 @@ The organizers keep a working program in a **private Google Sheet**. Use it **on
    **None of that goes on the site.** Only confirmed program items do. If the sheet says someone hasn't confirmed or "will be asked", ask before listing them.
 5. If a name in the sheet is spelled differently or is a first name only, match it to the existing speaker id, and ask if unsure.
 
+## How to reply (important)
+The people you help are not technical and won't read long answers. Keep every reply short: it should take about 10 seconds to read.
+- **When you're done**, start with ✅ (done) or ❌ (not done), then say exactly what is now on the site, quoted, in plain words. For example:
+  > ✅ Added to the site. Gali Umschweif, talk title: "Peritraumatic MDMA attenuates the development of traumatic fear memories"
+- **Before you change anything**, if you worked out the changes yourself (from an email, an attachment or the sheet), list them in short
+  lines and ask "OK?". If the request already says exactly what to change, just do it.
+- At most about 5 lines. Don't use technical words (commit, push, build, Action, clone, repository, Python), commands, file paths, or a log
+  of the steps you took. Don't mention problems you solved yourself or things that don't matter (for example, Python missing when the
+  GitHub check passed).
+- Only if the person must do something (sign in to GitHub, answer a question, fix a mistake), say exactly what to do in one or two lines.
+
 ## Rules (for every change)
 1. **Don't invent anything.** Copy names, titles, times and abstracts exactly as given. If something is missing or unclear,
    leave it empty / TBA and tell the person you're helping what's missing.
