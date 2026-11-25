@@ -1,7 +1,7 @@
 # IBBRC 2027 conference website: instructions for Claude
 
 You are helping update the website of the 10th International IBBRC Conference, "Brain–Body Plasticity",
-Feb 23–25 2027, Spadia Hall, University of Haifa. Attendees read it on their phones during the conference.
+Feb 23–25 2027, Safdie Hall, University of Haifa. Attendees read it on their phones during the conference.
 
 - Page for all participants: https://ibbrc2027.github.io/
 - Page for invited speakers only: https://ibbrc2027.github.io/speakers-b663ff.html. **Never link to it, mention it, or copy its address anywhere.**
